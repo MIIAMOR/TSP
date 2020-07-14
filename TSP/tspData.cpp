@@ -2,17 +2,40 @@
 
 /*-----------------------------数据构造--------------------------------*/
 //文件读取 字符串变为整型数
-int trans(string num)
+int trans(string s)
 {
-	int result = 0;
-	for (int i = num.size() - 1; i >= 0; i--)
+	int i = 0, i1 = 0, i2 = 0, m = 0;
+	double result = 0, x = 0, y = 0;
+	for (i = 0; i < s.size(); i++)
 	{
-		int temp = 0;
-		temp = num[i] - '0';
-		temp = temp * pow(10, num.size() - i - 1);
-		result += temp;
+		if (s[i] == '.')
+		{
+			m = i; break;
+		}
+		if (i == s.size() - 1)
+		{
+			m = s.size(); break;
+		}
 	}
-	return result;
+	for (i1 = m - 1; i1 >= 0; i1--)
+	{
+		double temp;
+		temp = (double)s[i1] - (double)'0';
+		temp *= pow(10, m - 1 - i1);
+		x += temp;
+	}
+	if (m != s.size())//还有小数部分
+	{
+		for (i2 = m + 1; i2 < s.size(); i2++)
+		{
+			double temp;
+			temp = (double)s[i2] - (double)'0';
+			temp *= pow(10, m - i2);
+			y += temp;
+		}
+	}
+	result = x + y;
+	return int(result);
 }
 
 //构建点 点的构造函数
@@ -28,7 +51,7 @@ point::point(string data)
 		{
 			temp += data[i];
 		}
-		else
+		else if(!temp.empty())
 		{
 			//cout << temp;
 			num[j] = trans(temp);
@@ -40,16 +63,14 @@ point::point(string data)
 }
 
 //图 tsp数据的构造函数
-tspData::tspData(string infile, string outfile)
+tspData::tspData(string infile1,string infile2, string outfile)
 {
 	points.clear();
-	minWay.clear();
-	minWayLength = 0;
 	total = 0;
 	bestWayLength = 0;
 	table = NULL;
 	ifstream ifs;
-	ifs.open(infile, ios::in);
+	ifs.open(infile1, ios::in);
 	if (!ifs.is_open())
 	{
 		cout << "文件打开失败" << endl;
@@ -59,7 +80,7 @@ tspData::tspData(string infile, string outfile)
 	string temp;
 	while (getline(ifs, temp))
 	{
-		if (temp[0] > '9' || temp[0] < '0')
+		if ((temp[0] > '9' || temp[0] < '0') && temp[0] != ' ')
 		{
 			continue;
 		}
@@ -101,7 +122,7 @@ tspData::tspData(string infile, string outfile)
 		ofs << endl;
 	}
 	ofs.close();
-	best();
+	best(infile2);
 	//测试代码，是否成功读取文件
 	/*for (int i = 0; i < total; i++)
 	{
@@ -117,7 +138,7 @@ tspData::tspData(string infile, string outfile)
 tspData::~tspData()
 {
 	points.clear();
-	minWay.clear();
+	wayGreedy.clear();
 	if (table != NULL)
 	{
 		for (int i = 0; i < total; i++)
@@ -127,7 +148,6 @@ tspData::~tspData()
 		delete[] table;
 	}
 	total = 0;
-	minWayLength = 0;
 	table = NULL;
 }
 
@@ -155,10 +175,10 @@ int tspData::getindex(int n)
 }
 
 //最优解
-void tspData::best()
+void tspData::best(string infile)
 {
 	ifstream ifs;
-	string file = bestfile;
+	string file = infile;
 	ifs.open(file, ios::in);
 	if (!ifs.is_open())
 	{
@@ -170,28 +190,31 @@ void tspData::best()
 	vector<int> record;
 	while (getline(ifs, temp))
 	{
-		if (temp[0] > '9' || temp[0] < '0')
+		if ((temp[0] > '9' || temp[0] < '0') && temp[0] != ' ')
 		{
 			continue;
 		}
 		record.push_back(trans(temp));
 	}
 	ifs.close();
-	record.push_back(1); //int m = 0;
-	for (unsigned int i = 0; i < record.size() - 1; i++)
+	//int m = 0;
+	for (int i = 0; i < record.size() - 1; i++)
 	{
 		bestWayLength += table[getindex(record[i])][getindex(record[i + 1])];
 		//m++;
 	}
 	//cout << m << endl;
 }
+/*-----------------------------数据构造--------------------------------*/
 
+
+/*-----------------------------贪心算法求解--------------------------------*/
 bool tspData::ifIn(int index)
 {
-	for (unsigned int i = 0; i < minWay.size(); i++)
+	for (unsigned int i = 0; i < wayGreedy.size(); i++)
 	{
 		//如果点在记录的集合中，返回真
-		if (index == minWay[i])
+		if (index == wayGreedy[i])
 		{
 			return true;
 		}
@@ -214,10 +237,8 @@ int tspData::minLength(int index)
 	}
 	return points[index_find].n;
 }
-/*-----------------------------数据构造--------------------------------*/
 
-/*-----------------------------贪心算法求解--------------------------------*/
-void tspData::TSP1(string file, int begin)
+void tspData::TSPGreedy(string file, int begin)
 {
 	//超出点集合，退出
 	if (begin > total || begin <= 0)
@@ -233,41 +254,31 @@ void tspData::TSP1(string file, int begin)
 		cout << "文件打开失败" << endl;
 		return;
 	}
-	cout << "<----以下是贪心算法思想求解TSP问题---->" << endl;
-	cout << "贪心思想只能求得每一步的局部最短路径，因此最终结果是近似最优解" << endl;
-	cout << "结果保存在 data/testResult1.txt 文件中" << endl;
 	//起点记录
-	minWay.push_back(begin);
+	wayGreedy.push_back(begin);
 	//循环条件：没有完全遍历
-	while (minWay.size() < total)
+	while (wayGreedy.size() < total)
 	{
 		int x = 0, y = 0;
 		//测试 数组长度
 		//cout << minWay.size() << " ";
 		//把目前最短距离对应的点记录
-		x = minWay[minWay.size() - 1];
-		minWay.push_back(minLength(x));
+		x = wayGreedy[wayGreedy.size() - 1];
+		wayGreedy.push_back(minLength(x));
 		//记录路径长度
-		x = minWay[minWay.size() - 2];
-		y = minWay[minWay.size() - 1];
-		minWayLength += table[getindex(x)][getindex(y)];
+		x = wayGreedy[wayGreedy.size() - 2];
+		y = wayGreedy[wayGreedy.size() - 1];
+		minWayGreedy += table[getindex(x)][getindex(y)];
 	}
 	//文件记录
-	ofs << "贪心算法思想下的最优路线为：" << endl;
-	ofs << "贪心思想只能求得每一步只能求得局部最短路径，因此最终结果是近似最优解" << endl;
-	minWayLength += table[minWay.back() - 1][begin - 1];
-	ofs << "\n最短路程的长度为：" << minWayLength << endl;
-	ofs << "真正的最短路径为：" << bestWayLength << endl;
-	ofs << "此算法和最优解的近似度为:" << minWayLength / double(bestWayLength) << endl;
-	for (unsigned int i = 0; i < minWay.size(); i++)
+	minWayGreedy += table[wayGreedy.back() - 1][begin - 1];
+	for (unsigned int i = 0; i < wayGreedy.size(); i++)
 	{
-		ofs << minWay[i] << endl;
+		ofs << wayGreedy[i] << endl;
 	}
 	//遍历结束，回到起点
 	ofs << begin << endl;
 	ofs.close();
 	//成功写入文件中后 清空数组
-	minWay.clear();
-	minWayLength = 0;
 }
 /*-----------------------------贪心算法求解--------------------------------*/
