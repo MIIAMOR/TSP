@@ -141,10 +141,12 @@
   <ItemGroup>
     <ClCompile Include="TSP.cpp" />
     <ClCompile Include="tspData.cpp" />
+    <ClCompile Include="TSPsolve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
     <ClInclude Include="tspData.h" />
+    <ClInclude Include="TSPsolve.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
