@@ -13,5 +13,6 @@ public:
 	TSPsolve();//构造函数  获取文件夹数据
 	void getSolution();//TSP问题求解
 	void Greedy();//贪心法求解
+	void Genetic();//遗传算法求解
 };
 

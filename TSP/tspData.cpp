@@ -65,6 +65,7 @@ point::point(string data)
 //图 tsp数据的构造函数
 tspData::tspData(string infile1,string infile2, string outfile)
 {
+	minWayGreedy = 0;
 	points.clear();
 	total = 0;
 	bestWayLength = 0;
@@ -282,3 +283,226 @@ void tspData::TSPGreedy(string file, int begin)
 	//成功写入文件中后 清空数组
 }
 /*-----------------------------贪心算法求解--------------------------------*/
+
+
+/*-----------------------------遗传算法求解--------------------------------*/
+void tspData::initPopulation()
+{
+	//cout << lifeCount;
+	life.clear();//先清空种群
+	//扫描每一个个体
+	vector<int> lifeTemp;
+	for (int i = 0; i < lifeCount; i++)
+	{
+		for (int i1 = 0; i1 < total; i1++)
+		{
+			lifeTemp.push_back(i1 + 1);
+		}
+		//测试输出
+		/*for (int i1 = 0; i1 < total; i1++)
+		{
+			cout << lifeTemp[i1] << " ";
+		}
+		cout << endl;*/
+		random_shuffle(lifeTemp.begin(), lifeTemp.end());
+		life.push_back(lifeTemp);
+		lifeTemp.clear();
+	}
+}
+
+void tspData::getScore()
+{
+	double totalScore = 0;
+	score.clear(); judgeTable.clear();
+	for (int i = 0; i < lifeCount; i++)
+	{
+		int tempLen = 0; double s = 0;
+		for (int i1 = 0; i1 < total - 2; i1++)
+		{
+			tempLen += table[getindex(life[i][i1])][getindex(life[i][i1 + 1])];
+		}
+		tempLen += table[getindex(life[i][total - 1])][getindex(life[i].front())];
+		//cout << tempLen << " ";
+		s = 1000000 / double(tempLen);
+		totalScore += s;
+		//cout << s << " ";
+		score.push_back(s);
+	}
+	//cout << totalScore << " " << endl;
+	for (int i = 0; i < lifeCount; i++)
+	{
+		if (i == 0)
+		{
+			judgeTable.push_back(score[i] / totalScore);
+		}
+		else
+		{
+			judgeTable.push_back(score[i] / totalScore + judgeTable[i - 1]);
+		}
+		//cout << judgeTable[i] << " ";
+	}
+	//cout << endl;
+}
+
+vector<int>& tspData::getOne()
+{
+	double rate = (rand() % 1000) / double(1000);
+	//cout << rate << endl;
+	for (int i = lifeCount - 2; i >= 0; i--)
+	{
+		if (rate > judgeTable[i])
+		{
+			return life[i + 1];
+		}
+	}
+	return life[0];
+	cout << "不存在的个体，出现错误" << endl;
+	exit(0);
+}
+
+vector<int>& tspData::getBest()
+{
+	int index = 0; double rate = 0;
+	for (int i = 0; i < lifeCount; i++)
+	{
+		if (score[i] > rate)
+		{
+			rate = score[i]; index = i;
+		}
+		//cout << score[i] << " ";
+	}
+	return life[index];
+}
+
+vector<int> tspData::cross(vector<int> p1, vector<int> p2)
+{
+	int index1, index2 = 0;
+	index1 = rand() % total; 
+	index2 = rand() % (total - index1) + index1; //cout << index1 << " " << index2 << endl;
+	//把p2中index1到index2的片段交叉放到p1中，形成新的序列
+	vector<int> temp, newLife;
+	for (int i = index1; i <= index2; i++)
+	{
+		temp.push_back(p2[i]);
+	}
+	for (unsigned int i = 0; i < p1.size(); i++)
+	{
+		if (i == index1)
+		{
+			for (unsigned int i1 = 0; i1 < temp.size(); i1++)
+			{
+				newLife.push_back(temp[i1]);
+			}
+		}
+		int sign = -1;
+		for (unsigned int i1 = 0; i1 < temp.size(); i1++)
+		{
+			//临时序列中出现了数字，记录
+			if (p1[i] == temp[i1])
+			{
+				sign = i1;
+				break;
+			}
+		}
+		if (sign == -1)
+		{
+			newLife.push_back(p1[i]);
+		}
+	}
+	//cout << newLife.size() << endl;
+	/*for (unsigned int i = 0; i < total; i++)
+	{
+		cout << newLife[i] << " ";
+	}*/
+	return newLife;
+}
+
+vector<int> tspData::mutation(vector<int> aLife)
+{
+	vector<int> newOne;//建立新个体
+	newOne = aLife;
+	int index1, index2, temp;
+	index1 = rand() % total; index2 = rand() % total;
+	temp = newOne[index1];
+	newOne[index1]= newOne[index2];
+	newOne[index2] = temp;
+	return newOne;
+}
+
+vector<int> tspData::newChild(double crossRate, double mutationRate)
+{
+	vector<int> newOne;
+	//从现有种群中选出两个父代
+	vector<int> parent1 = getOne();
+	vector<int> parent2 = getOne();
+	//cout << parent1.size() << " " << parent2.size() << endl;
+	double rate;
+	//1.直接遗传还是交叉遗传
+	rate = (rand() % 1000) / double(1000);
+	if (rate < crossRate)
+	{
+		//cout<<cross(parent1, parent2).size();
+		newOne = cross(parent1, parent2);
+		//cout << newOne.size() << endl;
+		crossCount++;
+	}
+	else
+	{
+		newOne = parent1;
+	}
+	//1.是否出现变异
+	rate = (rand() % 1000) / double(1000);
+	if (rate < mutationRate)
+	{
+		newOne = mutation(newOne);
+		mutationCount++;
+	}
+	//cout << newOne.size() << endl;
+	return newOne;
+}
+
+void tspData::TSPGenetic(int ge, int lifeCount, double crossRate, double mutationRate, string file)
+{
+	this->lifeCount = lifeCount;
+	initPopulation();//初始化种群
+	//代际交替
+	for (int i = 0; i < ge; i++)
+	{
+		int minWay = 0;
+		getScore();//计算每一代中每个个体的适应度
+		vector<vector<int>> newLives;//记录下一代
+		//这一代最优个体存活
+		bestLife = getBest();
+		newLives.push_back(bestLife);
+		bestLife.push_back(bestLife.front());
+		for (int i1 = 0; i1 < total; i1++)
+		{
+			minWay += table[getindex(bestLife[i1])][getindex(bestLife[i1 + 1])];
+		}
+		minWayGenetic.push_back(minWay);
+		//cout << minWay << endl;
+		//当新一代个体数不够时
+		while (newLives.size() < lifeCount)
+		{
+			//产生的新子代进入种群
+			vector<int> temp;
+			temp = newChild(crossRate, mutationRate);
+			//cout << temp.size();
+			newLives.push_back(temp);
+		}
+		//代际更替
+		life = newLives;
+	}
+	ofstream ofs;
+	ofs.open(file, ios::out);
+	bestLife = getBest();
+	bestLife.push_back(bestLife.front());
+	for (int i = 0; i < total; i++)
+	{
+		//minWay += table[getindex(bestLife[i])][getindex(bestLife[i + 1])];
+		ofs << bestLife[i] << endl;
+	}
+	ofs << bestLife.back();
+	ofs.close();
+}
+/*-----------------------------遗传算法求解--------------------------------*/

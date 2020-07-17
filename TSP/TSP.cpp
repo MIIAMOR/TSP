@@ -8,6 +8,7 @@ using namespace std;
 
 int main()
 {
+	srand((unsigned)time(NULL));
 	TSPsolve TSP;
 	TSP.getSolution();
 	return 0;

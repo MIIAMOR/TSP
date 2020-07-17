@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 infileData = "testData.txt"
 dirName = ["att48/", "a280/", "eil76/", "bayg29/", "berlin52/",
            "berlin52/", "eil101/", "eil51/", "krod100/", "lin105/", "st70/"]
-infile = ["bestData.txt", "resultGreedy.txt"]
-picname = ["最优解", "贪婪算法"]
+infile = ["bestData.txt", "resultGreedy1.txt", "resultGenetic.txt"]
+picname = ["最优解", "贪婪算法之最近邻优先", "遗传算法"]
 for k in range(len(dirName)):
     file1 = open(dirName[k]+infileData)  # 读入文件
     lines = file1.readlines()

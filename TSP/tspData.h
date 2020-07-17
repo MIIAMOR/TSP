@@ -50,5 +50,25 @@ public:
 	//参数是文件地址 以及 起始位置
 	void TSPGreedy(string file, int begin);
 	/*-----------------------------贪心算法求解--------------------------------*/
-};
 
+	/*-----------------------------遗传算法求解--------------------------------*/
+	//参考资料：https://blog.csdn.net/v_JULY_v/article/details/6132775
+	int crossCount; int mutationCount;//交叉遗传次数和变异次数
+	int lifeCount;//一代个体的数量
+	vector<vector<int>> life;//每一代的个体（一个序列）,一代个体有lifeCount个
+	vector<int> bestLife;//记录最后一次迭代时中最好的个体
+	vector<int> minWayGenetic;//遗传算法下的长度
+	vector<double> score;//每一代的个体的评估值
+	vector<double> judgeTable;//构建一代的评估轮盘
+
+	void initPopulation();//随机初始化种群
+	void getScore();//针对个体求其适配度
+	vector<int>& getOne();//随机选择出一代个体中的一个
+	vector<int>& getBest();//选择出一代个体中最好的一个
+	vector<int> cross(vector<int> p1, vector<int> p2);//交叉遗传
+	vector<int> mutation(vector<int> aLife);//变异
+	vector<int> newChild(double crossRate, double mutationRate);//从父代产生新的个体
+	//遗传算法 参数分别是 迭代次数  一代个体数  交叉遗传概率 个体变异概率
+	void TSPGenetic(int ge, int lifeCount, double crossRate, double mutationRate, string file);
+	/*-----------------------------遗传算法求解--------------------------------*/
+};
