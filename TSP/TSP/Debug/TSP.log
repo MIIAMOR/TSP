@@ -1,0 +1,31 @@
+﻿  TSP.cpp
+  tspData.cpp
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(9,16): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(29,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(63,11): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(119,26): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(120,26): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(210,25): warning C4244: “参数”: 从“double”转换到“_Ty”，可能丢失数据
+          with
+          [
+              _Ty=int
+          ]
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(216,20): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(250,35): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(277,26): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(315,26): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(386,70): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(388,76): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(420,70): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(422,76): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(653,25): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(671,25): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(813,23): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(1072,71): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(1085,26): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(1097,20): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(1140,26): warning C4018: “<”: 有符号/无符号不匹配
+E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\TSP\tspData.cpp(1160,20): warning C4018: “<”: 有符号/无符号不匹配
+  TSPsolve.cpp
+  正在生成代码...
+  TSP.vcxproj -> E:\PROGRAM_TEST\VS2019C++\课堂学习\算法设计与分析\TSP\TSP\Debug\TSP.exe
